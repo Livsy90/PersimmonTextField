@@ -4,7 +4,7 @@ public final class DefaultInputAccessoryViewFactory: InputAccessoryViewFactoryPr
     
     private var action: () -> Void
     
-    init(action: @escaping () -> Void) {
+    public init(action: @escaping () -> Void) {
         self.action = action
     }
     
