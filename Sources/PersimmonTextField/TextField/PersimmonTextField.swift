@@ -44,7 +44,7 @@ public struct PersimmonTextField: UIViewRepresentable {
     var spellCheckingType: UITextSpellCheckingType = .default
     
     var validations: [ValidatorProtocol] = []
-    var barButtonsFactory: BarButtonsFactoryProtocol?
+    var inputAccessoryViewFactory: InputAccessoryViewFactoryProtocol?
     var inputListener: MaskedTextInputListener?
     
     @Binding private var text: String
@@ -53,7 +53,7 @@ public struct PersimmonTextField: UIViewRepresentable {
     public init(
         _ placeholder: String,
         text: Binding<String>,
-        isFirstResponder: Binding<Bool> = Binding<Bool>(get: { false }, set: { _ in })
+        isFirstResponder: Binding<Bool>
     ) {
         
         self.placeholder = placeholder
@@ -124,13 +124,9 @@ public struct PersimmonTextField: UIViewRepresentable {
             for: .editingChanged
         )
         
-        if let barButtonsFactory {
-            context.coordinator.barButtonsFactory = barButtonsFactory
-            let bar = UIToolbar()
-            let buttons = barButtonsFactory.barButtonItems()
-            bar.items = buttons
-            bar.sizeToFit()
-            textField.inputAccessoryView = bar
+        if let inputAccessoryViewFactory {
+            context.coordinator.inputAccessoryViewFactory = inputAccessoryViewFactory
+            textField.inputAccessoryView = inputAccessoryViewFactory.inputAccessoryView()
         }
         
         return textField
@@ -195,7 +191,7 @@ public struct PersimmonTextField: UIViewRepresentable {
     public final class Coordinator: NSObject, UITextFieldDelegate {
         
         var inputListener: MaskedTextInputListener?
-        var barButtonsFactory: BarButtonsFactoryProtocol?
+        var inputAccessoryViewFactory: InputAccessoryViewFactoryProtocol?
         
         @Binding private var text: String
         @Binding private var isFirstResponder: Bool

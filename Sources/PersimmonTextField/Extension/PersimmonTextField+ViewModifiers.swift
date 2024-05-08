@@ -161,9 +161,9 @@ extension PersimmonTextField {
         return view
     }
     
-    public func barBauttonsFactory(_ barBauttonsFactory: BarButtonsFactoryProtocol) -> PersimmonTextField {
+    public func inputAccessoryViewFactory(_ inputAccessoryViewFactory: InputAccessoryViewFactoryProtocol) -> PersimmonTextField {
         var view = self
-        view.barButtonsFactory = barBauttonsFactory
+        view.inputAccessoryViewFactory = inputAccessoryViewFactory
         return view
     }
     
