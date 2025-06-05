@@ -2,7 +2,7 @@ import SwiftUI
 import UIKit
 import InputMask
 
-public struct PersimmonTextField: UIViewRepresentable {
+public struct PersimmonTextField<Field: Hashable>: UIViewRepresentable {
     
     @Environment(\.layoutDirection) var layoutDirection: LayoutDirection
     @Environment(\.colorScheme) var colorScheme: ColorScheme
@@ -48,17 +48,24 @@ public struct PersimmonTextField: UIViewRepresentable {
     var inputListener: MaskedTextInputListener?
     
     @Binding private var text: String
-    @Binding private var isFirstResponder: Bool
+    @Binding private var focusedField: Field?
+    private let equalField: Field
+    
+    private var isFirstResponder: Bool {
+        focusedField == equalField
+    }
     
     public init(
         _ placeholder: String,
         text: Binding<String>,
-        isFirstResponder: Binding<Bool>
+        focusedField: Binding<Field?>,
+        equals: Field
     ) {
         
         self.placeholder = placeholder
-        self._text = text
-        self._isFirstResponder = isFirstResponder
+        equalField = equals
+        _text = text
+        _focusedField = focusedField
     }
     
     private func configure(_ textField: UITextField) {
@@ -170,10 +177,10 @@ public struct PersimmonTextField: UIViewRepresentable {
     }
     
     public func makeCoordinator() -> Coordinator {
-        
         Coordinator(
             text: $text,
-            isFirstResponder: $isFirstResponder,
+            focusedField: $focusedField,
+            equalField: equalField,
             characterLimit: characterLimit,
             isValidateAfterFinishEditing: isValidateAfterFinishEditing,
             isValidateWhileEditing: isValidateWhileEditing,
@@ -194,7 +201,9 @@ public struct PersimmonTextField: UIViewRepresentable {
         var inputAccessoryViewFactory: InputAccessoryViewFactoryProtocol?
         
         @Binding private var text: String
-        @Binding private var isFirstResponder: Bool
+        @Binding private var focusedField: Field?
+        
+        private let equalField: Field
         
         private var didBeginEditing: () -> Void
         private var didChange: () -> Void
@@ -203,16 +212,20 @@ public struct PersimmonTextField: UIViewRepresentable {
         private var shouldClear: () -> Void
         private var onValidate: (ValidationResult) -> Void
         
-        private var characterLimit: Int? = nil
+        private var characterLimit: Int?
         private var isValidateAfterFinishEditing: Bool
         private var isValidateWhileEditing: Bool
         private var validations: [ValidatorProtocol]
         
         private var wasEdited = false
+        private var isFirstResponder: Bool {
+            focusedField == equalField
+        }
         
         init(
             text: Binding<String>,
-            isFirstResponder: Binding<Bool>,
+            focusedField: Binding<Field?>,
+            equalField: Field,
             characterLimit: Int?,
             isValidateAfterFinishEditing: Bool,
             isValidateWhileEditing: Bool,
@@ -226,8 +239,9 @@ public struct PersimmonTextField: UIViewRepresentable {
             onValidate: @escaping (ValidationResult) -> Void
         ) {
             
-            self._text = text
-            self._isFirstResponder = isFirstResponder
+            _text = text
+            _focusedField = focusedField
+            self.equalField = equalField
             self.characterLimit = characterLimit
             self.isValidateAfterFinishEditing = isValidateAfterFinishEditing
             self.isValidateWhileEditing = isValidateWhileEditing
@@ -252,7 +266,7 @@ public struct PersimmonTextField: UIViewRepresentable {
                 text = textField.text ?? ""
                 
                 if !isFirstResponder {
-                    isFirstResponder = true
+                    focusedField = equalField
                 }
                 
                 if textField.clearsOnBeginEditing {
@@ -283,7 +297,7 @@ public struct PersimmonTextField: UIViewRepresentable {
             
             DispatchQueue.main.async { [self] in
                 if isFirstResponder {
-                    isFirstResponder = false
+                    focusedField = equalField
                 }
                 
                 didEndEditing()
@@ -295,7 +309,7 @@ public struct PersimmonTextField: UIViewRepresentable {
         }
         
         public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-            isFirstResponder = false
+            focusedField = nil
             shouldReturn()
             return false
         }
@@ -330,4 +344,61 @@ public struct PersimmonTextField: UIViewRepresentable {
         
     }
     
+}
+
+#Preview {
+    enum FieldKind {
+        case username, password
+    }
+    
+    @Previewable @State var focusedField: FieldKind?
+    @Previewable @State var username = ""
+    @Previewable @State var password = ""
+    
+    return ScrollView {
+        VStack {
+            PersimmonTextField(
+                "Username",
+                text: $username,
+                focusedField: $focusedField,
+                equals: .username
+            )
+            .padding()
+            .background {
+                RoundedRectangle(cornerRadius: 8)
+                    .fill(.gray.opacity(0.2))
+            }
+            
+            PersimmonTextField(
+                "Password",
+                text: $password,
+                focusedField: $focusedField,
+                equals: .password
+            )
+            .inputAccessoryView(DoneInputAccessoryView {
+                focusedField = nil
+            })
+            .padding()
+            .background {
+                RoundedRectangle(cornerRadius: 8)
+                    .fill(.gray.opacity(0.2))
+            }
+            
+            Button("toggle") {
+                switch focusedField {
+                case .username:
+                    focusedField = .password
+                case .password:
+                    focusedField = .username
+                case .none:
+                    focusedField = .username
+                }
+            }
+            
+            Button("resign") {
+                focusedField = nil
+            }
+        }
+        .padding()
+    }
 }

@@ -9,33 +9,21 @@ extension PersimmonTextField {
         return view
     }
     
-    public func font(_ font: Font?) -> some View {
-        var view = self
-        if let font {
-            view.font = UIFont.preferredFont(from: font)
-        }
-        return view
-    }
-    
-    public func uiFont(_ font: UIFont?) -> PersimmonTextField {
+    public func font(_ font: UIFont) -> some View {
         var view = self
         view.font = font
         return view
     }
     
-    public func foregroundColor(_ color: Color?) -> PersimmonTextField {
+    public func foregroundColor(_ color: Color) -> PersimmonTextField {
         var view = self
-        if let color {
-            view.foregroundColor = UIColor(color)
-        }
+        view.foregroundColor = UIColor(color)
         return view
     }
     
-    public func accentColor(_ accentColor: Color?) -> PersimmonTextField {
+    public func accentColor(_ accentColor: Color) -> PersimmonTextField {
         var view = self
-        if let accentColor {
-            view.accentColor = UIColor(accentColor)
-        }
+        view.accentColor = UIColor(accentColor)
         return view
     }
     
@@ -58,13 +46,9 @@ extension PersimmonTextField {
         return view
     }
     
-    public func disableAutocorrection(_ disable: Bool?) -> PersimmonTextField {
+    public func disableAutocorrection(_ disable: Bool) -> PersimmonTextField {
         var view = self
-        if let disable {
-            view.autocorrection = disable ? .no : .yes
-        } else {
-            view.autocorrection = .default
-        }
+        view.autocorrection = disable ? .no : .yes
         return view
     }
     
@@ -129,39 +113,31 @@ extension PersimmonTextField {
         return view
     }
     
-    public func smartDashes(_ smartDashes: Bool? = nil) -> PersimmonTextField {
+    public func smartDashes(_ smartDashes: Bool) -> PersimmonTextField {
         var view = self
-        if let smartDashes {
-            view.smartDashesType = smartDashes ? .yes : .no
-        }
+        view.smartDashesType = smartDashes ? .yes : .no
         return view
     }
     
-    public func smartInsertDelete(_ smartInsertDelete: Bool? = nil) -> PersimmonTextField {
+    public func smartInsertDelete(_ smartInsertDelete: Bool) -> PersimmonTextField {
         var view = self
-        if let smartInsertDelete {
-            view.smartInsertDeleteType = smartInsertDelete ? .yes : .no
-        }
+        view.smartInsertDeleteType = smartInsertDelete ? .yes : .no
         return view
     }
     
-    public func smartQuotes(_ smartQuotes: Bool? = nil) -> PersimmonTextField {
+    public func smartQuotes(_ smartQuotes: Bool) -> PersimmonTextField {
         var view = self
-        if let smartQuotes {
-            view.smartQuotesType = smartQuotes ? .yes : .no
-        }
+        view.smartQuotesType = smartQuotes ? .yes : .no
         return view
     }
     
-    public func spellChecking(_ spellChecking: Bool? = nil) -> PersimmonTextField {
+    public func spellChecking(_ spellChecking: Bool) -> PersimmonTextField {
         var view = self
-        if let spellChecking {
-            view.spellCheckingType = spellChecking ? .yes : .no
-        }
+        view.spellCheckingType = spellChecking ? .yes : .no
         return view
     }
     
-    public func inputAccessoryViewFactory(_ inputAccessoryViewFactory: InputAccessoryViewFactoryProtocol) -> PersimmonTextField {
+    public func inputAccessoryView(_ inputAccessoryViewFactory: InputAccessoryViewFactoryProtocol) -> PersimmonTextField {
         var view = self
         view.inputAccessoryViewFactory = inputAccessoryViewFactory
         return view
@@ -188,7 +164,7 @@ extension PersimmonTextField {
         return view
     }
     
-    public func onEditingBegan(perform action: (() -> Void)? = nil) -> PersimmonTextField {
+    public func onEditingBegan(perform action: (() -> Void)?) -> PersimmonTextField {
         var view = self
         if let action {
             view.didBeginEditing = action
@@ -197,7 +173,7 @@ extension PersimmonTextField {
         
     }
     
-    public func onEdit(perform action: (() -> Void)? = nil) -> PersimmonTextField {
+    public func onEdit(perform action: (() -> Void)?) -> PersimmonTextField {
         var view = self
         if let action {
             view.didChange = action
@@ -206,7 +182,7 @@ extension PersimmonTextField {
         
     }
     
-    public func onEditingEnded(perform action: (() -> Void)? = nil) -> PersimmonTextField {
+    public func onEditingEnded(perform action: (() -> Void)?) -> PersimmonTextField {
         var view = self
         if let action {
             view.didEndEditing = action
@@ -214,7 +190,7 @@ extension PersimmonTextField {
         return view
     }
     
-    public func onReturn(perform action: (() -> Void)? = nil) -> PersimmonTextField {
+    public func onReturn(perform action: (() -> Void)?) -> PersimmonTextField {
         var view = self
         if let action {
             view.shouldReturn = action
@@ -222,7 +198,7 @@ extension PersimmonTextField {
         return view
     }
     
-    public func onClear(perform action: (() -> Void)? = nil) -> PersimmonTextField {
+    public func onClear(perform action: (() -> Void)?) -> PersimmonTextField {
         var view = self
         if let action {
             view.shouldClear = action
@@ -230,25 +206,4 @@ extension PersimmonTextField {
         return view
     }
     
-}
-
-
-fileprivate extension UIFont {
-    class func preferredFont(from font: Font) -> UIFont {
-        let style: UIFont.TextStyle =
-        switch font {
-        case .largeTitle:   .largeTitle
-        case .title:        .title1
-        case .title2:       .title2
-        case .title3:       .title3
-        case .headline:     .headline
-        case .subheadline:  .subheadline
-        case .callout:      .callout
-        case .caption:      .caption1
-        case .caption2:     .caption2
-        case .footnote:     .footnote
-        default: /*.body */ .body
-        }
-        return  UIFont.preferredFont(forTextStyle: style)
-    }
 }
