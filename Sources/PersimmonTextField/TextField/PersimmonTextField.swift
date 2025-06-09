@@ -1,5 +1,4 @@
 import SwiftUI
-import UIKit
 import InputMask
 
 public struct PersimmonTextField<Field: Hashable>: UIViewRepresentable {
@@ -344,61 +343,4 @@ public struct PersimmonTextField<Field: Hashable>: UIViewRepresentable {
         
     }
     
-}
-
-#Preview {
-    enum FieldKind {
-        case username, password
-    }
-    
-    @Previewable @State var focusedField: FieldKind?
-    @Previewable @State var username = ""
-    @Previewable @State var password = ""
-    
-    return ScrollView {
-        VStack {
-            PersimmonTextField(
-                "Username",
-                text: $username,
-                focusedField: $focusedField,
-                equals: .username
-            )
-            .padding()
-            .background {
-                RoundedRectangle(cornerRadius: 8)
-                    .fill(.gray.opacity(0.2))
-            }
-            
-            PersimmonTextField(
-                "Password",
-                text: $password,
-                focusedField: $focusedField,
-                equals: .password
-            )
-            .inputAccessoryView(DoneInputAccessoryView {
-                focusedField = nil
-            })
-            .padding()
-            .background {
-                RoundedRectangle(cornerRadius: 8)
-                    .fill(.gray.opacity(0.2))
-            }
-            
-            Button("toggle") {
-                switch focusedField {
-                case .username:
-                    focusedField = .password
-                case .password:
-                    focusedField = .username
-                case .none:
-                    focusedField = .username
-                }
-            }
-            
-            Button("resign") {
-                focusedField = nil
-            }
-        }
-        .padding()
-    }
 }

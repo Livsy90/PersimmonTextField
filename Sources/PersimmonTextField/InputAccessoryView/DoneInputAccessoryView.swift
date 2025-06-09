@@ -1,6 +1,6 @@
 import UIKit
 
-public final class DoneInputAccessoryView: InputAccessoryViewFactoryProtocol {
+public final class DoneButton: InputAccessoryViewFactoryProtocol {
     
     private var action: () -> Void
     
