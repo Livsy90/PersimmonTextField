@@ -1,4 +1,3 @@
-#if canImport(UIKit)
 import UIKit
 
 public final class DoneButton: InputAccessoryViewFactoryProtocol {
@@ -25,4 +24,3 @@ public final class DoneButton: InputAccessoryViewFactoryProtocol {
     }
     
 }
-#endif
