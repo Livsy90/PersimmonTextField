@@ -1,4 +1,4 @@
-import UIKit
+import SwiftUI
 
 public protocol InputAccessoryViewFactoryProtocol: AnyObject {
     func inputAccessoryView() -> UIView
